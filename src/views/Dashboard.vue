@@ -9,11 +9,9 @@ let textColor = documentStyle.getPropertyValue('--text-color');
 let textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
 let surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
-const lineData = ref(null);
-const dropdownValue = ref(null);
+const models = ref(['Mixtral', 'GPT-4']);
+const selectedModels = ref(['Mixtral', 'GPT-4']);
 
-
-// const tasks = ref(['summarization', 'QA']);
 const tasks = ref([
     {
         name: 'MeQSum',
@@ -33,92 +31,89 @@ const tasks = ref([
     },
     {
         name: 'Problem Summary',
-        metric: 'R-1',
+        metrics: ['R-1'],
         results: [
             {
                 label: 'Mixtral',
                 color: '#50514F',
-                value: 12.3
+                value: [12.3]
             },
             {
                 label: 'GPT-4',
                 color: '#F25F5C',
-                value: 18.8
+                value: [18.8]
             }
         ]
     },
     {
         name: 'MedNLI',
-        metric: 'R-1',
+        metrics: ['R-1'],
         results: [
             {
                 label: 'Mixtral',
                 color: '#50514F',
-                value: 12.3
+                value: [12.3]
             },
             {
                 label: 'GPT-4',
                 color: '#F25F5C',
-                value: 18.8
+                value: [18.8]
             }
         ]
     },
     {
         name: 'LongHealth',
-        metric: 'R-1',
+        metrics: ['R-1'],
         results: [
             {
                 label: 'Mixtral',
                 color: '#50514F',
-                value: 12.3
+                value: [12.3]
             },
             {
                 label: 'GPT-4',
                 color: '#F25F5C',
-                value: 18.8
+                value: [18.8]
             }
         ]
     },
     {
         name: 'MeDiSumQA',
-        metric: 'R-1',
+        metrics: ['R-1'],
         results: [
             {
                 label: 'Mixtral',
                 color: '#50514F',
-                value: 12.3
+                value: [12.3]
             },
             {
                 label: 'GPT-4',
                 color: '#F25F5C',
-                value: 18.8
+                value: [18.8]
             }
         ]
     },
     {
         name: 'MeDiSumCode',
-        metric: 'R-1',
+        metrics: ['R-1'],
         results: [
             {
                 label: 'Mixtral',
                 color: '#50514F',
-                value: 12.3
+                value: [12.3]
             },
             {
                 label: 'GPT-4',
                 color: '#F25F5C',
-                value: 18.8
+                value: [18.8]
             }
         ]
     }
 ]);
 
-const models = computed(() => {
-    return tasks.value[0].results.map((val) => ({ name: val.label }));
-});
+const selectedTask = ref(tasks.value[0]);
+const selectedMetric = ref(selectedTask.value.metrics[0]);
 
-
-const multiselectValue = ref(null);
 const setColorOptions = () => {
     documentStyle = getComputedStyle(document.documentElement);
     textColor = documentStyle.getPropertyValue('--text-color');
@@ -126,26 +121,29 @@ const setColorOptions = () => {
     surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 };
 
-const barData = (index) => {
+const barData = (task, metric) => {
     let labels = [];
     let datasets = [];
-    if (multiselectValue.value == null) {
+    if (selectedModels.value == null) {
         return {
             labels: labels,
             datasets: datasets
         };
     }
 
-    let selectedModels = multiselectValue.value.map((val) => val.name);
+    labels.push(task.name);
 
-    labels.push(tasks.value[index].name);
-
-    for (var result of tasks.value[index].results) {
-        if (selectedModels.includes(result.label)) {
+    for (var result of task.results) {
+        if (selectedModels.value.includes(result.label)) {
+            let metricIndex = task.metrics.findIndex((elem) => elem == metric);
+            console.log(task);
+            console.log(metric);
+            console.log(metricIndex);
+            console.log([result.value[metricIndex]]);
             datasets.push({
                 label: result.label,
-                data: [result.value],
-                backgroundColor: result.color
+                data: [result.value[metricIndex]],
+                backgroundColor: getColor(task, metric, result)
             });
         }
     }
@@ -154,6 +152,10 @@ const barData = (index) => {
         datasets: datasets
     };
 };
+
+function getColor(task, metric, result) {
+    return result.color;
+}
 
 const barOptions = ref({
     plugins: {
@@ -199,31 +201,17 @@ watch(
 
 <template>
     <div class="w-full h-full flex flex-column align-items-center">
-        <MultiSelect v-model="multiselectValue" :options="models" optionLabel="name" placeholder="Select Models" :filter="true">
-            <template #value="slotProps">
-                <div class="inline-flex align-items-center py-1 px-2 bg-primary text-primary border-round mr-2" v-for="option of slotProps.value" :key="option.code">
-                    <div>{{ option.name }}</div>
+        <div class="w-full lg:w-6">
+            <MultiSelect class="w-full" v-model="selectedModels" display="chip" :options="models" placeholder="Select Models" filter> </MultiSelect>
+            <div class="card w-full my-3">
+                <div class="w-full flex align-items-end align-content-start">
+                    <h5 class="m-0">{{ selectedTask.name }} ({{selectedMetric}})</h5>
+                    <div class="flex-grow-1"></div>
+                    <Dropdown class="mx-3" v-model="selectedTask" :options="tasks" optionLabel="name" placeholder="Select Task" />
+                    <Dropdown v-model="selectedMetric" :options="selectedTask.metrics" placeholder="Select Metric" />
                 </div>
-                <template v-if="!slotProps.value || slotProps.value.length === 0">
-                    <div class="p-1">Select Countries</div>
-                </template>
-            </template>
-            <template #option="slotProps">
-                <div class="flex align-items-center">
-                    <div>{{ slotProps.option.name }}</div>
-                </div>
-            </template>
-        </MultiSelect>
-        <div class="grid">
-            <template v-for="(task, index) in tasks" :key="index">
-                <div class="col-6">
-                    <div class="card">
-                        <Dropdown v-model="dropdownValue" :options="task.metrics" placeholder="Select Metric" />
-                        <h5>{{ task.name }}</h5>
-                        <Chart type="bar" :data="barData(index)" :options="barOptions"></Chart>
-                    </div>
-                </div>
-            </template>
+                <Chart type="bar" :data="barData(selectedTask, selectedMetric)" :options="barOptions"></Chart>
+            </div>
         </div>
     </div>
 </template>
