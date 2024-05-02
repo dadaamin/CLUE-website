@@ -10,27 +10,93 @@ let textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary'
 let surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
 const lineData = ref(null);
+const dropdownValue = ref(null);
+
 
 // const tasks = ref(['summarization', 'QA']);
 const tasks = ref([
     {
-        name: 'summarization',
-        metric: 'F1',
+        name: 'MeQSum',
+        metrics: ['R-L', 'R-1', 'R-2', 'BERTScore'],
         results: [
             {
                 label: 'Mixtral',
                 color: '#50514F',
-                value: 35.5
+                value: [35.5, 35.5, 35.5, 35.5]
             },
             {
                 label: 'GPT-4',
                 color: '#F25F5C',
-                value: 53.2
+                value: [53.2, 53.2, 53.2, 53.2]
             }
         ]
     },
     {
-        name: 'QA',
+        name: 'Problem Summary',
+        metric: 'R-1',
+        results: [
+            {
+                label: 'Mixtral',
+                color: '#50514F',
+                value: 12.3
+            },
+            {
+                label: 'GPT-4',
+                color: '#F25F5C',
+                value: 18.8
+            }
+        ]
+    },
+    {
+        name: 'MedNLI',
+        metric: 'R-1',
+        results: [
+            {
+                label: 'Mixtral',
+                color: '#50514F',
+                value: 12.3
+            },
+            {
+                label: 'GPT-4',
+                color: '#F25F5C',
+                value: 18.8
+            }
+        ]
+    },
+    {
+        name: 'LongHealth',
+        metric: 'R-1',
+        results: [
+            {
+                label: 'Mixtral',
+                color: '#50514F',
+                value: 12.3
+            },
+            {
+                label: 'GPT-4',
+                color: '#F25F5C',
+                value: 18.8
+            }
+        ]
+    },
+    {
+        name: 'MeDiSumQA',
+        metric: 'R-1',
+        results: [
+            {
+                label: 'Mixtral',
+                color: '#50514F',
+                value: 12.3
+            },
+            {
+                label: 'GPT-4',
+                color: '#F25F5C',
+                value: 18.8
+            }
+        ]
+    },
+    {
+        name: 'MeDiSumCode',
         metric: 'R-1',
         results: [
             {
@@ -50,6 +116,7 @@ const tasks = ref([
 const models = computed(() => {
     return tasks.value[0].results.map((val) => ({ name: val.label }));
 });
+
 
 const multiselectValue = ref(null);
 const setColorOptions = () => {
@@ -77,7 +144,7 @@ const barData = (index) => {
         if (selectedModels.includes(result.label)) {
             datasets.push({
                 label: result.label,
-                data: result.value,
+                data: [result.value],
                 backgroundColor: result.color
             });
         }
@@ -151,6 +218,7 @@ watch(
             <template v-for="(task, index) in tasks" :key="index">
                 <div class="col-6">
                     <div class="card">
+                        <Dropdown v-model="dropdownValue" :options="task.metrics" placeholder="Select Metric" />
                         <h5>{{ task.name }}</h5>
                         <Chart type="bar" :data="barData(index)" :options="barOptions"></Chart>
                     </div>
