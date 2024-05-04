@@ -20,7 +20,15 @@ const router = createRouter({
             name: 'notfound',
             component: () => import('@/views/pages/NotFound.vue')
         }
-    ]
+    ],
+    scrollBehavior(to, from, savedPosition) {
+        if (to.hash) {
+            return {
+                selector: to.hash,
+                behavior: 'smooth'
+            };
+        }
+    }
 });
 
 export default router;

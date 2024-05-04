@@ -18,7 +18,7 @@ onBeforeUnmount(() => {
 });
 
 const logoUrl = computed(() => {
-    return `/layout/images/logo.png`;
+    return `/layout/images/lupe.png`;
 });
 
 const onTopBarMenuButton = () => {
@@ -63,7 +63,6 @@ const isOutsideClicked = (event) => {
 <template>
     <div class="layout-topbar flex justify-content-center">
         <router-link to="/" class="layout-topbar-logo flex justify-content-center">
-            <img :src="logoUrl" alt="logo" />
             <span>CLUE BENCHMARK</span>
         </router-link>
     </div>
