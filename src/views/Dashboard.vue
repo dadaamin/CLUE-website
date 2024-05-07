@@ -1,6 +1,5 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
-import ScrollPanel from 'primevue/scrollpanel';
 import { computed, ref, watch } from 'vue';
 
 const { layoutConfig } = useLayout();
@@ -408,6 +407,16 @@ const scrollToAnchor = (selector) => {
         });
     }
 };
+
+const bibtex = ref(null);
+
+const copyBibTex = (event) => {
+    const preElement = event.target.nextElementSibling;
+    if (preElement) {
+        const text = preElement.innerText;
+        navigator.clipboard.writeText(text);
+    }
+};
 </script>
 
 <template>
@@ -487,7 +496,9 @@ const scrollToAnchor = (selector) => {
                             inquiries into concise, medically accurate summaries. The ability to effectively interpret and summarize patient inquiries, despite not involving clinical documents, is highly valuable for applications in healthcare
                             settings.
                         </p>
-                        <pre style="background-color: #f5f5f5; overflow-x: auto"><code>@inproceedings{abacha2019summarization,
+                        <pre style="background-color: #ebe8e8; overflow-x: auto; position: relative">
+<button @click="copyBibTex($event)" class="copy-btn pi pi-copy" style="position: absolute; top: 5px; right: 5px;"></button>
+<code ref="bibtex">@inproceedings{abacha2019summarization,
   title={On the summarization of consumer health questions},
   author={Abacha, Asma Ben and Demner-Fushman, Dina},
   booktitle={Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics},
@@ -501,7 +512,9 @@ const scrollToAnchor = (selector) => {
                             inputs, while the Plan section provides the ground truth for the models' predictions. This task is a form of information extraction that challenges models to identify specific health issues from condensed, preprocessed
                             clinical text.
                         </p>
-                        <pre style="background-color: #f5f5f5; overflow-x: auto"><code>@inproceedings{gao2022summarizing,
+                        <pre style="background-color: #ebe8e8; overflow-x: auto; position: relative">
+<button @click="copyBibTex($event)" class="copy-btn pi pi-copy" style="position: absolute; top: 5px; right: 5px;"></button>
+<code ref="bibtex">@inproceedings{gao2022summarizing,
   title={Summarizing patients’ problems from hospital progress notes using pre-trained sequence-to-sequence models},
   author={Gao, Yanjun and Miller, Timothy and Xu, Dongfang and Dligach, Dmitriy and Churpek, Matthew M and Afshar, Majid},
   booktitle={Proceedings of COLING. International Conference on Computational Linguistics},
@@ -517,7 +530,9 @@ const scrollToAnchor = (selector) => {
                             The core task involves predicting the logical relationship—whether it is contradiction, neutrality, or entailment—between each premise and its hypotheses. With its focus on short input lengths, MedNLI effectively measures
                             a model's clinical reasoning capabilities without the complexity of processing long text inputs.
                         </p>
-                        <pre style="background-color: #f5f5f5; overflow-x: auto"><code>@article{romanov2018lessons,
+                        <pre style="background-color: #ebe8e8; overflow-x: auto; position: relative">
+<button @click="copyBibTex($event)" class="copy-btn pi pi-copy" style="position: absolute; top: 5px; right: 5px;"></button>
+<code ref="bibtex">@article{romanov2018lessons,
 	title = {Lessons from Natural Language Inference in the Clinical Domain},
 	url = {http://arxiv.org/abs/1808.06752},
 	abstract = {State of the art models using deep neural networks have become very good in learning an accurate mapping from inputs to outputs. However, they still lack generalization capabilities in conditions that differ from the ones encountered during training. This is even more challenging in specialized, and knowledge intensive domains, where training data is limited. To address this gap, we introduce {MedNLI} - a dataset annotated by doctors, performing a natural language inference task ({NLI}), grounded in the medical history of patients. We present strategies to: 1) leverage transfer learning using datasets from the open domain, (e.g. {SNLI}) and 2) incorporate domain knowledge from external data and lexical sources (e.g. medical terminologies). Our results demonstrate performance gains using both strategies.},
@@ -535,7 +550,9 @@ const scrollToAnchor = (selector) => {
                             answering multiple-choice questions, structured into three distinct evaluation sub-tasks. These tasks progressively increase in complexity by first focusing on relevant documents, then introducing extraneous information to
                             filter out, and finally testing the model's ability to identify unprovided information. In contrast to the original paper, we have set the maximum context length to 8k tokens.
                         </p>
-                        <pre style="background-color: #f5f5f5; overflow-x: auto"><code>@article{adams2024longhealth,
+                        <pre style="background-color: #ebe8e8; overflow-x: auto; position: relative">
+<button @click="copyBibTex($event)" class="copy-btn pi pi-copy" style="position: absolute; top: 5px; right: 5px;"></button>
+<code ref="bibtex">@article{adams2024longhealth,
   title={LongHealth: A Question Answering Benchmark with Long Clinical Documents},
   author={Adams, Lisa and Busch, Felix and Han, Tianyu and Excoffier, Jean-Baptiste and Ortala, Matthieu and L{\"o}ser, Alexander and Aerts, Hugo JWL and Kather, Jakob Nikolas and Truhn, Daniel and Bressem, Keno},
   journal={arXiv preprint arXiv:2401.14490},
@@ -575,9 +592,11 @@ const scrollToAnchor = (selector) => {
                 <h3>BibTeX</h3>
                 <Divider />
                 <section class="section" id="BibTeX">
-                    <div class="container is-max-desktop content">
+                    <div class="container is-max-desktop content" style="position: relative">
                         <p>If you find our work useful, please cite our paper:</p>
-                        <pre style="background-color: #f5f5f5; overflow-x: auto"><code>@article{dada2024clue,
+                        <pre style="background-color: #ebe8e8; overflow-x: auto; position: relative">
+                            <button @click="copyBibTex($event)" class="copy-btn pi pi-copy" style="position: absolute; top: 5px; right: 5px;"></button>
+<code ref="bibtex">@article{dada2024clue,
   title={CLUE: A Clinical Language Understanding Evaluation for LLMs},
   author={Dada, Amin and Bauer, Marie and Contreras, Amanda Butler and Kora{\c{s}}, Osman Alperen and Seibold, Constantin Marc and Smith, Kaleb E and Kleesiek, Jens},
   journal={arXiv preprint arXiv:2404.04067},

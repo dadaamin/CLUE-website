@@ -58,3 +58,20 @@ ul.custom-style {
 ul.custom-style li:not(:last-child) {
     margin-bottom: 20px; /* Increase gap between items */
 }
+
+
+.copy-btn {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: #848d97; /* Icon color */
+    border: none;
+    outline: none;
+    border-radius: 3px; /* Optional: Adds rounded corners */
+    padding: 2px 5px; /* Padding around the icon */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Adds shadow for better visibility */
+  }
+  .copy-btn:hover {
+    background-color: #D3D3D3;
+  }
