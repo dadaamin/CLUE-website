@@ -58,8 +58,8 @@ const models = ref([
     'Mistral-7B-Instruct-v0.2',
     'BioMistral-7B-DARE',
     'llama2-7b',
-    'llama2-70b',
     'meditron-7b',
+    'llama2-70b',
     'meditron-70b',
     'BioMistral-7B'
 ]);
