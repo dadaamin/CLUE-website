@@ -9,84 +9,94 @@ let textColor = documentStyle.getPropertyValue('--text-color');
 let textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
 let surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
-const pastelColors = [
-    '#BFD8D2', // Pastel green
-    '#F3E5AB', // Pastel yellow
-    '#B5B9FF', // Pastel blue
-    '#FFC8A2', // Pastel orange
-    '#ECCFCF', // Pastel red
-    '#C4C6E7', // Pastel purple
-    '#E1E6FA', // Pastel gray-blue
-    '#D1E8E4', // Pastel teal
-    '#FAE1DF', // Pastel peach
-    '#EDE7B1', // Pastel lemon
-    '#C9C9FF', // Pastel periwinkle
-    '#FFDFD3', // Pastel coral
-    '#A8E6CF', // Pastel mint
-    '#D3A4FF', // Pastel lavender
-    '#D5ECC2', // Pastel lime
-    '#FFF5BA', // Pastel cream
-    '#FFD3B6', // Pastel salmon
-    '#DCEDC1', // Pastel spring green
-    '#F7D6E0', // Pastel fuchsia
-    '#FBE7C6', // Pastel buff
-    '#A4B9EF', // Pastel sky blue
-    '#FFABAB', // Pastel soft red
-    '#CABFAD', // Pastel taupe
-    '#B8E0F9', // Pastel sky
-    '#9ED2C6', // Pastel sea green
-    '#FFDEB4', // Pastel apricot
-    '#FAE3D9', // Pastel biscotti
-    '#B6CFB6', // Pastel forest
-    '#AFCBEB', // Pastel cornflower
-    '#C2C2F0' // Pastel periwinkle light
+const colors = [
+    '#8CB0A4',
+    '#C6B786',
+    '#8C8CFF',
+    '#FF9E7A',
+    '#BFA5A5',
+    '#9698D2',
+    '#B3B9D7',
+    '#A2B8B5',
+    '#D5B1B0',
+    '#BEB888',
+    '#9797FF',
+    '#FFBFAA',
+    '#81BAA4',
+    '#A978FF',
+    '#A8C697',
+    '#CCD488',
+    '#FFA78D',
+    '#AFC48F',
+    '#D0A9B3',
+    '#CBB99D',
+    '#8290D2',
+    '#FF8A8A',
+    '#978878',
+    '#90B2D7',
+    '#7AB8A1',
+    '#FFB985',
+    '#D4B3A5',
+    '#8BA78B',
+    '#8AA3C7',
+    '#9797E0'
 ];
 
 const models = ref([
-    'Mixtral-8x7B-Instruct-v0.1',
-    'Mixtral-8x22B-Instruct-v0.1',
     'Llama3-OpenBioLLM-8B',
     'Meta-Llama-3-8B-Instruct',
     'Llama3-OpenBioLLM-70B',
     'Meta-Llama-3-70B-Instruct',
+    'Mixtral-8x7B-Instruct-v0.1',
+    'Mixtral-8x22B-Instruct-v0.1',
     'zephyr-7b-beta',
     'Mistral-7B-Instruct-v0.1',
+    'Mistral-7B-Instruct-v0.2',
     'BioMistral-7B-DARE',
     'llama2-7b',
     'llama2-70b',
     'meditron-7b',
     'meditron-70b',
-    'Mistral-7B-v0.1',
     'BioMistral-7B'
 ]);
-const selectedModels = ref(['Llama3-OpenBioLLM-8B', 'Meta-Llama-3-8B-Instruct', 'Llama3-OpenBioLLM-70B', 'Meta-Llama-3-70B-Instruct']);
 
+const detectMobileDevice = () => {
+    const toMatch = [/Android/i, /webOS/i, /iPhone/i, /iPad/i, /iPod/i, /BlackBerry/i, /Windows Phone/i];
+
+    return toMatch.some((toMatchItem) => {
+        return navigator.userAgent.match(toMatchItem);
+    });
+};
+const isMobile = detectMobileDevice();
+const selectedModels = isMobile ? ref(['Llama3-OpenBioLLM-70B', 'Meta-Llama-3-70B-Instruct']) : ref(['Llama3-OpenBioLLM-8B', 'Meta-Llama-3-8B-Instruct', 'Llama3-OpenBioLLM-70B', 'Meta-Llama-3-70B-Instruct']);
 const colorMap = models.value.reduce((acc, model, index) => {
-    acc[model] = pastelColors[index % pastelColors.length];
+    acc[model] = colors[index % colors.length];
     return acc;
 }, {});
 
 const modelScores = {
-    'Mixtral-8x7B-Instruct-v0.1': [64.44, 41.78],
-    'Mixtral-8x22B-Instruct-v0.1': [62.89],
-    'Llama3-OpenBioLLM-8B': [46.78],
-    'Meta-Llama-3-8B-Instruct': [60.9],
-    'Llama3-OpenBioLLM-70B': [59.27],
-    'Meta-Llama-3-70B-Instruct': [64.31],
-    'zephyr-7b-beta': [60.2, 35.25],
-    'Mistral-7B-Instruct-v0.1': [57.96, 27.9],
-    'BioMistral-7B-DARE': [60.41, 30.11],
     'llama2-7b': [33.76],
     'llama2-70b': [48.95],
     'meditron-7b': [26.32],
     'meditron-70b': [43.93],
-    'BioMistral-7B': [57.77]
+    'Llama3-OpenBioLLM-8B': [54.3, 30.48],
+    'Meta-Llama-3-8B-Instruct': [65.07, 45.96],
+    'Llama3-OpenBioLLM-70B': [64.99, 51.13],
+    'Meta-Llama-3-70B-Instruct': [68.72, 60.99],
+    'zephyr-7b-beta': [60.2, 34.81],
+    'Mistral-7B-Instruct-v0.1': [57.96, 28.85],
+    'Mistral-7B-Instruct-v0.2': [63.09, 44.72],
+    'BioMistral-7B': [57.77],
+    'BioMistral-7B-DARE': [60.41, 31.14],
+    'Mixtral-8x7B-Instruct-v0.1': [64.44, 48.64],
+    'Mixtral-8x22B-Instruct-v0.1': [68.58, 56.68]
 };
 
 const modelMetrics = {
     MeDiSumCode: {
         'zephyr-7b-beta': [2.31, 12.0, 71.27],
         'Mistral-7B-Instruct-v0.1': [0.57, 3.78, 37.25],
+        'Mistral-7B-Instruct-v0.2': [3.08, 18.23, 68.76],
         'BioMistral-7B-DARE': [1.2, 6.66, 56.04],
         'Mixtral-8x7B-Instruct-v0.1': [10.49, 28.99, 82.87],
         'Llama3-OpenBioLLM-8B': [0.84, 0.48, 51.16],
@@ -98,6 +108,7 @@ const modelMetrics = {
     MeDiSumQA: {
         'zephyr-7b-beta': [18.2, 21.3, 8.91, 66.27, 19.06],
         'Mistral-7B-Instruct-v0.1': [18.78, 21.5, 10.05, 66.71, 18.63],
+        'Mistral-7B-Instruct-v0.2': [24.39, 28.0, 13.2, 69.53, 24.07],
         'BioMistral-7B-DARE': [17.54, 19.9, 9.34, 64.6, 18.65],
         'Mixtral-8x7B-Instruct-v0.1': [25.54, 29.26, 13.89, 69.57, 24.47],
         'Llama3-OpenBioLLM-8B': [25.1, 27.84, 13.12, 66.3, 24.79],
@@ -107,8 +118,14 @@ const modelMetrics = {
         'Mixtral-8x22B-Instruct-v0.1': [23.8, 27.62, 12.69, 69.23, 23.55]
     },
     MeQSum: {
+        'llama2-7b': [7.16, 8.58, 2.89, 37.5],
+        'llama2-70b': [3.75, 4.15, 1.05, 33.59],
+        'meditron-7b': [6.17, 7.47, 2.53, 40.53],
+        'meditron-70b': [2.95, 3.24, 0.76, 31.27],
         'zephyr-7b-beta': [7.16, 8.58, 2.89, 37.5],
         'Mistral-7B-Instruct-v0.1': [21.85, 25.26, 11.17, 66.15],
+        'Mistral-7B-Instruct-v0.2': [33.54, 37.47, 16.61, 73.47],
+        'BioMistral-7B': [24.58, 27.38, 12.1, 67.05],
         'BioMistral-7B-DARE': [26.16, 29.69, 13.49, 68.68],
         'Mixtral-8x7B-Instruct-v0.1': [32.47, 36.38, 16.86, 72.8],
         'Llama3-OpenBioLLM-8B': [26.21, 29.41, 14.03, 62.39],
@@ -118,8 +135,14 @@ const modelMetrics = {
         'Mixtral-8x22B-Instruct-v0.1': [36.15, 39.94, 19.45, 75.02]
     },
     'Problem Summary': {
+        'llama2-7b': [5.97, 7.35, 2.11, 59.45, 9.06],
+        'llama2-70b': [7.13, 8.77, 3.15, 59.61, 14.34],
+        'meditron-7b': [6.49, 7.87, 2.59, 59.57, 12.52],
+        'meditron-70b': [7.22, 8.91, 3.21, 60.08, 13.91],
         'zephyr-7b-beta': [5.97, 7.35, 2.11, 59.45, 9.06],
         'Mistral-7B-Instruct-v0.1': [14.46, 18.6, 6.26, 65.79, 20.08],
+        'Mistral-7B-Instruct-v0.2': [19.57, 25.59, 8.92, 69.64, 22.07],
+        'BioMistral-7B': [18.0, 21.85, 8.63, 66.96, 20.92],
         'BioMistral-7B-DARE': [18.81, 22.92, 8.93, 68.93, 22.65],
         'Mixtral-8x7B-Instruct-v0.1': [17.44, 23.39, 7.7, 68.56, 19.51],
         'Llama3-OpenBioLLM-8B': [10.82, 13.62, 4.03, 64.14, 15.67],
@@ -129,8 +152,14 @@ const modelMetrics = {
         'Mixtral-8x22B-Instruct-v0.1': [17.97, 22.6, 8.17, 69.29, 22.31]
     },
     MedNLI: {
+        'llama2-7b': [29.51],
+        'llama2-70b': [76.27],
+        'meditron-7b': [2.39],
+        'meditron-70b': [63.52],
         'zephyr-7b-beta': [68.45],
         'Mistral-7B-Instruct-v0.1': [64.79],
+        'Mistral-7B-Instruct-v0.2': [69.93],
+        'BioMistral-7B': [62.32],
         'BioMistral-7B-DARE': [66.76],
         'Mixtral-8x7B-Instruct-v0.1': [76.48],
         'Llama3-OpenBioLLM-8B': [44.93],
@@ -138,6 +167,18 @@ const modelMetrics = {
         'Llama3-OpenBioLLM-70B': [80.85],
         'Meta-Llama-3-70B-Instruct': [79.37],
         'Mixtral-8x22B-Instruct-v0.1': [84.93]
+    },
+    LongHealth: {
+        'Mistral-7B-Instruct-v0.1': [45.75, 40.65, 3.65],
+        'BioMistral-7B-DARE': [46.0, 40.85, 4.6],
+        'Mistral-7B-Instruct-v0.2': [67.2, 62.4, 42.45],
+        'Mixtral-8x7B-Instruct-v0.1': [76.5, 73.65, 24.2],
+        'Mixtral-8x22B-Instruct-v0.1': [79.0, 73.9, 86.3],
+        'zephyr-7b-beta': [42.9, 30.5, 26.35],
+        'Llama3-OpenBioLLM-8B': [37.55, 41.75, 1.55],
+        'Meta-Llama-3-8B-Instruct': [68.3, 66.55, 56.25],
+        'Llama3-OpenBioLLM-70B': [80.2, 75.6, 62.9],
+        'Meta-Llama-3-70B-Instruct': [81.65, 77.9, 91.7]
     }
 };
 
@@ -185,6 +226,15 @@ const tasks = ref([
             label: model,
             color: colorMap[model],
             value: modelMetrics['MedNLI'][model] || [] // Default to empty if no data available
+        }))
+    },
+    {
+        name: 'LongHealth',
+        metrics: ['Task 1 Accuracy', 'Task 2 Accuracy', 'Task 3 Accuracy'],
+        results: models.value.map((model) => ({
+            label: model,
+            color: colorMap[model],
+            value: modelMetrics['LongHealth'][model] || [] // Default to empty if no data available
         }))
     }
 ]);
@@ -339,16 +389,33 @@ watch(
     },
     { immediate: true }
 );
+
+const scrollToAnchor = (selector) => {
+    const offset = 70; // Height of the topbar in pixels
+    const element = document.querySelector(selector);
+    if (element) {
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
+    }
+};
 </script>
 
 <template>
     <div class="w-full h-full flex flex-column align-items-center">
         <div class="w-full lg:w-7">
             <div class="card flex flex-wrap gap-3 justify-content-center header">
-                <h1 style="font-family: 'Google Sans', sans-serif">CLUE: A Clinical Language Understanding Evaluation for LLMs</h1>
+                <h1 style="font-family: 'Google Sans', sans-serif"><span style="font-family: 'EB Garamond'">CLUE</span>: A Clinical Language Understanding Evaluation for LLMs</h1>
                 <img src="/layout/images/clue-logo.png" alt="Image Description 1" class="clue-logo" />
 
-                <h4>Amin Dada, Marie Bauer, Amanda Butler Contreras, Osman Alperen Koraş, Constantin Marc Seibold, Kaleb E Smith, Jens Kleesiek</h4>
+                <h4>
+                    <span class="white-space-nowrap">Amin Dada</span>, <span class="white-space-nowrap">Marie Bauer</span>, <span class="white-space-nowrap">Amanda Butler Contreras</span>, <span class="white-space-nowrap">Osman Alperen Koraş</span>,
+                    <span class="white-space-nowrap">Constantin Marc Seibold</span>, <span class="white-space-nowrap">Kaleb E Smith</span>, <span class="white-space-nowrap">Jens Kleesiek</span>
+                </h4>
 
                 <a href="https://github.com/TIO-IKIM/CLUE" target="_blank" rel="noopener noreferrer">
                     <Button label="Code" icon="pi pi-github" severity="contrast" />
@@ -356,27 +423,37 @@ watch(
                 <a href="https://arxiv.org/abs/2404.04067" target="_blank" rel="noopener noreferrer">
                     <Button label="Paper" icon="pi pi-book" severity="contrast" />
                 </a>
+                <Button label="Results" icon="pi pi-chart-bar" @click="scrollToAnchor('#model-select')" severity="contrast" />
             </div>
-            <div id="model-select" class="card w-full my-3">
+            <div class="card w-full my-3 text-lg">
                 <h3>Motivation</h3>
                 <p class="m-2">
                     <Divider />
-                    The medical evaluation of LLMs has primarily relied on datasets consisting of multiple choice questions from sources such as MMLU, MEDQA, MedMCQA, and synthetic questions derived from PubMed articles. However, this approach
-                    overlooks a significant aspect: none of these evaluations utilize clinical text. The distinction is crucial because, despite the reliance on extensive medical knowledge for these quizzes, the format and content of clinical
-                    documents are markedly different.
+                    Despite the advancements promised by biomedical LLMs for patient care, a significant gap exists in their evaluation, particularly concerning their application in real-world clinical settings. Existing assessments, focused on
+                    medical knowledge through constructed questions, fall short of capturing the complexity and diversity of clinical tasks. Additionally, the rapid pace at which LLMs evolve further complicates selecting the most appropriate models
+                    for healthcare applications. In response to these challenges, <span style="font-family: 'EB Garamond'">CLUE</span> aims to offer a comprehensive and standardized framework for assessing the performance of both specialized
+                    biomedical and advanced general-domain LLMs in practical healthcare tasks.
                 </p>
                 <p class="m-2">
-                    Clinical texts often feature an irregular structure, abundant jargon and abbreviations that vary across specialties and regions, and are generally lengthier than the quiz questions used in standard datasets, resulting in a diverse
-                    and complex domain of texts.
+                    Clinical texts, often characterized by their irregular structure, abundant jargon, and region-specific abbreviations, present a complex domain that significantly differs from the concise quiz questions typically used in standard
+                    datasets. Recent research has also highlighted significant issues with data contamination in LLM evaluations, casting doubt on the reliability of past findings. In response, our project aims to develop more robust and realistic
+                    medical evaluation methods for LLMs to enhance their integrity and applicability in real-world scenarios, thereby addressing these challenges and proposing new strategies for more effective testing.
                 </p>
-                <p class="m-2">
-                    Moreover, recent research has uncovered substantial issues related to data contamination in LLM evaluations, which calls into question the validity of previous results. In light of these challenges, new strategies have been
-                    proposed to enhance the integrity and relevance of LLM testing.
-                </p>
-                <p class="m-2">
-                    Our project is committed to addressing these gaps by developing more robust and realistic medical evaluation methods for LLMs, ensuring they are better suited for real-world applications. This initiative represents a crucial step
-                    forward in understanding and improving the performance of LLMs in medical contexts.
-                </p>
+            </div>
+            <div class="card w-full my-3">
+                <h3>Key Takeaways</h3>
+                <Divider />
+                <ul class="custom-style text-lg">
+                    <li>
+                        To date, specialized biomedical LLMs do not show any performance advantage over general purpose LLMs according to this evaluation. Conversely, certain models adapted for the medical domain show inferior performance compared to
+                        their non-specialized counterparts.
+                    </li>
+                    <li>The context length is an important factor, as clinical documents quickly exceed a length of 4k tokens. If few-shot learning is also used, context lengths of 8k tokens are quickly no longer sufficient.</li>
+                    <li>
+                        It is possible to generate new data sets for evaluation on the basis of clinical documents that contain a summary, such as doctor's letters. We think that this represents an opportunity to counteract benchmark contamination by
+                        applying this approach to private clinical data.
+                    </li>
+                </ul>
             </div>
             <div id="model-select" class="card w-full my-3">
                 <h3>Model Selection</h3>
@@ -385,18 +462,22 @@ watch(
             </div>
 
             <div class="card w-full my-3">
-                <h3 id="results">Average Scores</h3>
+                <h3>Average Scores</h3>
                 <Divider />
+                <p>
+                    We provide two averaged scores: Level 1 and Level 2. Level 1 includes the tasks MedNLI, MeQSum and Problem Summary, which feature shorter examples. Level 2 includes the remaining tasks: MeDiSumCode, MeDiSumQA and LongHealth. We
+                    compute the average across all F1 and Accuracy scores, excluding ROUGE scores. Further details can be found in our <a href="https://arxiv.org/abs/2404.04067" target="_blank" rel="noopener noreferrer">paper</a>.
+                </p>
                 <Chart type="bar" :data="bar2Data(selectedTask, selectedMetric)" :options="bar2Option" :plugins="barPlugins"></Chart>
             </div>
 
-            <div class="card w-full my-3">
-                <h3>Task Scores</h3>
+            <div class="card w-full">
+                <h3>Individual Task Scores</h3>
                 <Divider />
-                <div class="w-full flex align-items-end align-content-start">
-                    <h5 class="m-4">{{ selectedTask.name }} ({{ selectedMetric }})</h5>
+                <div class="w-full mb-3">
+                    <h5 class="mb-3">{{ selectedTask.name }} ({{ selectedMetric }})</h5>
                     <div class="flex-grow-1"></div>
-                    <Dropdown class="mx-3" v-model="selectedTask" :options="tasks" optionLabel="name" placeholder="Select Task" />
+                    <Dropdown v-model="selectedTask" :options="tasks" optionLabel="name" placeholder="Select Task" />
                     <Dropdown v-model="selectedMetric" :options="selectedTask.metrics" placeholder="Select Metric" />
                 </div>
                 <Chart type="bar" :data="barData(selectedTask, selectedMetric)" :options="barOptions" :plugins="barPlugins"></Chart>
@@ -407,16 +488,16 @@ watch(
                 <TabView>
                     <TabPanel header="MeDiSumCode">
                         <p class="m-0">
-                            MeDiSumCode involves coding discharge summaries by assigning International Classification of Diseases (ICD-10) codes to diagnoses and procedures, a critical function for patient record management, billing, and statistics.
-                            It challenges language models to accurately extract diagnoses from lengthy, complex clinical texts and match them with the appropriate ICD-10 codes, which comprise over 70,000 options requiring extensive extensive
-                            knowledge of medical and coding systems. The task further tests the models' ability to integrate diagnosis identification with a detailed understanding of the ICD-10 structure for accurate code prediction.
+                            MeDiSumCode requires coding discharge summaries by assigning International Classification of Diseases (ICD-10) codes to diagnoses and procedures. The task challenges language models to extract diagnoses from complex
+                            clinical texts and match them with the correct ICD-10 codes, which include over 70,000 options and necessitate a thorough knowledge of the coding system. Additionally, it tests the models' ability to combine diagnosis
+                            identification with an understanding of the ICD-10 structure to predict codes effectively.
                         </p>
                     </TabPanel>
                     <TabPanel header="MeDiSumQA">
                         <p class="m-0">
-                            MeDiSumQA is a medical QA dataset that uses discharge summaries from MIMIC IV to generate question-answer pairs about a patient's hospital stay, focusing on extracting and querying key information. The questions are
-                            generated that involves identifying critical statements related to the patient’s medical history and hospitalization, then crafting questions that these statements can answer without. You can find a more detailed
-                            description in our paper.
+                            MeDiSumQA is a medical QA dataset derived from discharge summaries in the MIMIC IV database, designed to generate question-answer pairs about patient hospital stays using a structured Questions Under Discussion framework.
+                            The process includes parsing discharge letters, generating questions with minimal answer leakage through similarity metrics, and emphasizing clinical reasoning. You can find a more detailed description in our
+                            <a href="https://arxiv.org/abs/2404.04067" target="_blank" rel="noopener noreferrer">paper</a>.
                         </p>
                     </TabPanel>
                     <TabPanel header="MeQSum">
@@ -470,8 +551,8 @@ watch(
                     <TabPanel header="LongHealth">
                         <p class="m-0">
                             The LongHealth dataset features 20 intricate fictional patient records to test language models on their ability to handle extended texts, as these models typically underperform with longer inputs. It tasks models with
-                            answering multiple-choice questions across various cognitive challenges like information extraction and negation, structured into three distinct evaluation sub-tasks. These tasks progressively increase in complexity by
-                            first focusing on relevant documents, then introducing extraneous information to filter out, and finally testing the model's propensity to incorrectly infer unprovided information.
+                            answering multiple-choice questions, structured into three distinct evaluation sub-tasks. These tasks progressively increase in complexity by first focusing on relevant documents, then introducing extraneous information to
+                            filter out, and finally testing the model's ability to identify unprovided information. In contrast to the original paper, we have set the maximum context length to 8k tokens.
                         </p>
                         <pre style="background-color: #f5f5f5; overflow-x: auto"><code>@article{adams2024longhealth,
   title={LongHealth: A Question Answering Benchmark with Long Clinical Documents},
@@ -502,8 +583,8 @@ watch(
                 <Divider />
                 <p>Please reach out to <a class="link blue" href="mailto:amin.dada@uk-essen.de">Amin Dada</a> if you have any comments, questions, or suggestions.</p>
             </div>
-            <div class="image-container flex justify-content-center w-full">
-                <div class="image-container flex justify-content-center w-full">
+            <div class="image-container">
+                <div class="image-wrapper">
                     <img src="/layout/images/ume.png" alt="Image Description 1" class="ume-logo" />
                     <img src="/layout/images/NVIDIA_logo.svg" alt="Image Description 2" class="nvidia-logo" />
                 </div>
