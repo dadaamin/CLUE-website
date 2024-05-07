@@ -22,31 +22,15 @@ div.header {
     height: 150px;     /* Fixed height for all images */
     object-fit: contain; /* Changes to 'contain' to ensure full visibility of images */
 }
-/* General styles for the container and flex setup */
-.image-container {
-    display: flex;
-    justify-content: center; /* Center the wrapper horizontally */
-    width: 100%; /* Full width of the container */
-    padding-right: 1em;
-}
-
-.image-wrapper {
-    display: flex;
-    justify-content: center; /* Center images horizontally */
-    max-width: 100%; /* Limit width for better responsiveness */
-    flex-wrap: wrap; /* Allows items to wrap as needed */
-}
 
 /* Styles for the images */
 .ume-logo {
-    width: 40%;
-    height: 80%;
+    height: 8vh;
     margin-right: 2em;
 }
 
 .nvidia-logo {
-    width: 18%;
-    height: 80%;
+    height: 4vh;
     margin-left: 2em;
 
 }
@@ -71,6 +55,6 @@ ul.custom-style {
     margin-left: 10px; /* Reduced left margin */
     padding-left: 0; /* Remove padding if needed */
 }
-ul.custom-style li {
+ul.custom-style li:not(:last-child) {
     margin-bottom: 20px; /* Increase gap between items */
 }

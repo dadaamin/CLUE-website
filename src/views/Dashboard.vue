@@ -1,5 +1,6 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
+import ScrollPanel from 'primevue/scrollpanel';
 import { computed, ref, watch } from 'vue';
 
 const { layoutConfig } = useLayout();
@@ -8,6 +9,10 @@ let documentStyle = getComputedStyle(document.documentElement);
 let textColor = documentStyle.getPropertyValue('--text-color');
 let textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
 let surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+
+const is_small_device = computed(() => {
+    return window.innerWidth < 720;
+});
 
 const colors = [
     '#8CB0A4',
@@ -379,7 +384,7 @@ const bar2Option = ref({
             display: false
         }
     },
-    indexAxis: 'y'
+    indexAxis: is_small_device.value ? 'x' : 'y'
 });
 
 watch(
@@ -425,25 +430,28 @@ const scrollToAnchor = (selector) => {
                 </a>
                 <Button label="Results" icon="pi pi-chart-bar" @click="scrollToAnchor('#model-select')" severity="contrast" />
             </div>
-            <div class="card w-full my-3 text-lg">
-                <h3>Motivation</h3>
-                <p class="m-2">
+            <Panel class="w-full my-3 p-3 text-lg" toggleable>
+                <template #header><h3 class="m-0">Motivation</h3></template>
+
+                <p>
                     <Divider />
                     Despite the advancements promised by biomedical LLMs for patient care, a significant gap exists in their evaluation, particularly concerning their application in real-world clinical settings. Existing assessments, focused on
                     medical knowledge through constructed questions, fall short of capturing the complexity and diversity of clinical tasks. Additionally, the rapid pace at which LLMs evolve further complicates selecting the most appropriate models
                     for healthcare applications. In response to these challenges, <span style="font-family: 'EB Garamond'">CLUE</span> aims to offer a comprehensive and standardized framework for assessing the performance of both specialized
                     biomedical and advanced general-domain LLMs in practical healthcare tasks.
                 </p>
-                <p class="m-2">
+                <p>
                     Clinical texts, often characterized by their irregular structure, abundant jargon, and region-specific abbreviations, present a complex domain that significantly differs from the concise quiz questions typically used in standard
                     datasets. Recent research has also highlighted significant issues with data contamination in LLM evaluations, casting doubt on the reliability of past findings. In response, our project aims to develop more robust and realistic
                     medical evaluation methods for LLMs to enhance their integrity and applicability in real-world scenarios, thereby addressing these challenges and proposing new strategies for more effective testing.
                 </p>
-            </div>
-            <div class="card w-full my-3">
-                <h3>Key Takeaways</h3>
-                <Divider />
-                <ul class="custom-style text-lg">
+            </Panel>
+            <Panel class="w-full my-3 p-3" toggleable>
+                <template #header>
+                    <h3 class="m-0">Key Takeaways</h3>
+                </template>
+                <divider></divider>
+                <ul class="custom-style text-lg mb-0">
                     <li>
                         To date, specialized biomedical LLMs do not show any performance advantage over general purpose LLMs according to this evaluation. Conversely, certain models adapted for the medical domain show inferior performance compared to
                         their non-specialized counterparts.
@@ -454,38 +462,11 @@ const scrollToAnchor = (selector) => {
                         applying this approach to private clinical data.
                     </li>
                 </ul>
-            </div>
-            <div id="model-select" class="card w-full my-3">
-                <h3>Model Selection</h3>
-                <Divider />
-                <MultiSelect class="w-full" v-model="selectedModels" display="chip" :options="models" placeholder="Select Models" filter> </MultiSelect>
-            </div>
+            </Panel>
 
-            <div class="card w-full my-3">
-                <h3>Average Scores</h3>
-                <Divider />
-                <p>
-                    We provide two averaged scores: Level 1 and Level 2. Level 1 includes the tasks MedNLI, MeQSum and Problem Summary, which feature shorter examples. Level 2 includes the remaining tasks: MeDiSumCode, MeDiSumQA and LongHealth. We
-                    compute the average across all F1 and Accuracy scores, excluding ROUGE scores. Further details can be found in our <a href="https://arxiv.org/abs/2404.04067" target="_blank" rel="noopener noreferrer">paper</a>.
-                </p>
-                <Chart type="bar" :data="bar2Data(selectedTask, selectedMetric)" :options="bar2Option" :plugins="barPlugins"></Chart>
-            </div>
-
-            <div class="card w-full">
-                <h3>Individual Task Scores</h3>
-                <Divider />
-                <div class="w-full mb-3">
-                    <h5 class="mb-3">{{ selectedTask.name }} ({{ selectedMetric }})</h5>
-                    <div class="flex-grow-1"></div>
-                    <Dropdown v-model="selectedTask" :options="tasks" optionLabel="name" placeholder="Select Task" />
-                    <Dropdown v-model="selectedMetric" :options="selectedTask.metrics" placeholder="Select Metric" />
-                </div>
-                <Chart type="bar" :data="barData(selectedTask, selectedMetric)" :options="barOptions" :plugins="barPlugins"></Chart>
-            </div>
-            <div class="card w-full my-3">
-                <h3>Task Descriptions</h3>
-                <Divider />
-                <TabView>
+            <Panel class="w-full my-3 p-3" toggleable>
+                <template #header><h3 class="m-0">Task Descriptions</h3></template>
+                <TabView class="mt-3">
                     <TabPanel header="MeDiSumCode">
                         <p class="m-0">
                             MeDiSumCode requires coding discharge summaries by assigning International Classification of Diseases (ICD-10) codes to diagnoses and procedures. The task challenges language models to extract diagnoses from complex
@@ -562,6 +543,33 @@ const scrollToAnchor = (selector) => {
 }</code></pre>
                     </TabPanel>
                 </TabView>
+            </Panel>
+            <div id="model-select" class="card w-full my-3">
+                <h3>Model Selection</h3>
+                <Divider />
+                <MultiSelect class="w-full" v-model="selectedModels" display="chip" :options="models" placeholder="Select Models" filter> </MultiSelect>
+            </div>
+
+            <div class="card w-full my-3">
+                <h3>Average Scores</h3>
+                <Divider />
+                <p>
+                    We provide two averaged scores: Level 1 and Level 2. Level 1 includes the tasks MedNLI, MeQSum and Problem Summary, which feature shorter examples. Level 2 includes the remaining tasks: MeDiSumCode, MeDiSumQA and LongHealth. We
+                    compute the average across all F1 and Accuracy scores, excluding ROUGE scores. Further details can be found in our <a href="https://arxiv.org/abs/2404.04067" target="_blank" rel="noopener noreferrer">paper</a>.
+                </p>
+                <Chart type="bar" :data="bar2Data(selectedTask, selectedMetric)" :options="bar2Option" :plugins="barPlugins"></Chart>
+            </div>
+
+            <div class="card w-full">
+                <h3>Individual Task Scores</h3>
+                <Divider />
+                <div class="w-full mb-3">
+                    <h5 class="mb-3">{{ selectedTask.name }} ({{ selectedMetric }})</h5>
+                    <div class="flex-grow-1"></div>
+                    <Dropdown v-model="selectedTask" :options="tasks" optionLabel="name" placeholder="Select Task" />
+                    <Dropdown v-model="selectedMetric" :options="selectedTask.metrics" placeholder="Select Metric" />
+                </div>
+                <Chart type="bar" :data="barData(selectedTask, selectedMetric)" :options="barOptions" :plugins="barPlugins"></Chart>
             </div>
             <div class="card w-full my-3">
                 <h3>BibTeX</h3>
@@ -583,11 +591,9 @@ const scrollToAnchor = (selector) => {
                 <Divider />
                 <p>Please reach out to <a class="link blue" href="mailto:amin.dada@uk-essen.de">Amin Dada</a> if you have any comments, questions, or suggestions.</p>
             </div>
-            <div class="image-container">
-                <div class="image-wrapper">
-                    <img src="/layout/images/ume.png" alt="Image Description 1" class="ume-logo" />
-                    <img src="/layout/images/NVIDIA_logo.svg" alt="Image Description 2" class="nvidia-logo" />
-                </div>
+            <div class="flex align-items-center justify-content-center">
+                <img src="/layout/images/ume.png" class="ume-logo" />
+                <img src="/layout/images/NVIDIA_logo.svg" class="nvidia-logo" />
             </div>
         </div>
     </div>
