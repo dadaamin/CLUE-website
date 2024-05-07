@@ -591,7 +591,7 @@ const scrollToAnchor = (selector) => {
                 <Divider />
                 <p>Please reach out to <a class="link blue" href="mailto:amin.dada@uk-essen.de">Amin Dada</a> if you have any comments, questions, or suggestions.</p>
             </div>
-            <div class="flex align-items-center justify-content-center">
+            <div class="flex flex-column md:flex-row align-items-center justify-content-center">
                 <img src="/layout/images/ume.png" class="ume-logo" />
                 <img src="/layout/images/NVIDIA_logo.svg" class="nvidia-logo" />
             </div>
