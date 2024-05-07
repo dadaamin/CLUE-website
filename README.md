@@ -27,3 +27,9 @@ npm run build
 ```sh
 npm run lint
 ```
+
+### Deploy website
+
+```sh
+npm run deploy
+```
