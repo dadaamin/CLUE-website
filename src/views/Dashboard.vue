@@ -439,41 +439,38 @@ const copyBibTex = (event) => {
                 </a>
                 <Button label="Results" icon="pi pi-chart-bar" @click="scrollToAnchor('#model-select')" severity="contrast" />
             </div>
-            <Panel class="w-full my-3 p-3 text-lg" toggleable>
+            <Panel class="w-full my-3 p-3" v-bind="{ ...(isMobile ? { collapsed: true } : {}), toggleable: true }">
                 <template #header><h3 class="m-0">Motivation</h3></template>
 
                 <p>
                     <Divider />
-                    Despite the advancements promised by biomedical LLMs for patient care, a significant gap exists in their evaluation, particularly concerning their application in real-world clinical settings. Existing assessments, focused on
-                    medical knowledge through constructed questions, fall short of capturing the complexity and diversity of clinical tasks. Additionally, the rapid pace at which LLMs evolve further complicates selecting the most appropriate models
-                    for healthcare applications. In response to these challenges, <span style="font-family: 'EB Garamond'">CLUE</span> aims to offer a comprehensive and standardized framework for assessing the performance of both specialized
-                    biomedical and advanced general-domain LLMs in practical healthcare tasks.
+                    Biomedical LLMs promise significant advancements in patient care, yet their real-world evaluation remains lacking. Current assessments focus primarily on medical knowledge via constructed questions, which do not fully capture the
+                    complexity and diversity of clinical tasks. Furthermore, the rapid evolution of LLMs makes it challenging to choose the most suitable models for healthcare applications. To address these issues,
+                    <span style="font-family: 'EB Garamond'">CLUE</span> is a comprehensive and standardized framework to assess the performance of specialized biomedical and advanced general-domain LLMs in practical healthcare tasks.
                 </p>
                 <p>
-                    Clinical texts, often characterized by their irregular structure, abundant jargon, and region-specific abbreviations, present a complex domain that significantly differs from the concise quiz questions typically used in standard
-                    datasets. Recent research has also highlighted significant issues with data contamination in LLM evaluations, casting doubt on the reliability of past findings. In response, our project aims to develop more robust and realistic
-                    medical evaluation methods for LLMs to enhance their integrity and applicability in real-world scenarios, thereby addressing these challenges and proposing new strategies for more effective testing.
+                    Clinical texts are known for their irregular structure, abundant jargon, and region-specific abbreviations, making them substantially different from the concise quiz questions used in standard datasets. Recent studies have also
+                    identified significant data contamination in LLM evaluations, raising concerns about the reliability of previous results. In response, <span style="font-family: 'EB Garamond'">CLUE</span> is focusing on creating more robust and
+                    realistic medical evaluation methods for LLMs. This initiative aims to improve their integrity and real-world applicability, proposing new strategies for more effective testing.
                 </p>
             </Panel>
-            <Panel class="w-full my-3 p-3" toggleable>
+            <Panel class="w-full my-3 p-3" v-bind="{ ...(isMobile ? { collapsed: true } : {}), toggleable: true }">
                 <template #header>
                     <h3 class="m-0">Key Takeaways</h3>
                 </template>
                 <divider></divider>
-                <ul class="custom-style text-lg mb-0">
+                <ul class="custom-style mb-0">
+                    <li>Specialized biomedical LLMs do not show performance advantages over general purpose LLMs.</li>
+                    <li>Conversely, certain models adapted for the medical domain show inferior performance compared to their non-specialized counterparts.</li>
+                    <li>Context length is an important factor, as clinical documents quickly exceed a length of 4k tokens. When few-shot learning is applied, context lengths of 8k tokens are quickly no longer sufficient.</li>
                     <li>
-                        To date, specialized biomedical LLMs do not show any performance advantage over general purpose LLMs according to this evaluation. Conversely, certain models adapted for the medical domain show inferior performance compared to
-                        their non-specialized counterparts.
-                    </li>
-                    <li>The context length is an important factor, as clinical documents quickly exceed a length of 4k tokens. If few-shot learning is also used, context lengths of 8k tokens are quickly no longer sufficient.</li>
-                    <li>
-                        It is possible to generate new data sets for evaluation on the basis of clinical documents that contain a summary, such as doctor's letters. We think that this represents an opportunity to counteract benchmark contamination by
-                        applying this approach to private clinical data.
+                        It is possible to generate new data sets for evaluation on the basis of clinical documents that contain a summary, such as discharge summaries. We think that this represents an opportunity to counteract benchmark contamination
+                        by applying this approach to private clinical data.
                     </li>
                 </ul>
             </Panel>
 
-            <Panel class="w-full my-3 p-3" toggleable>
+            <Panel class="w-full my-3 p-3" v-bind="{ ...(isMobile ? { collapsed: true } : {}), toggleable: true }">
                 <template #header><h3 class="m-0">Task Descriptions</h3></template>
                 <TabView class="mt-3">
                     <TabPanel header="MeDiSumCode">
@@ -493,10 +490,10 @@ const copyBibTex = (event) => {
                     <TabPanel header="MeQSum">
                         <p class="m-0">
                             MeQSum comprises 1,000 consumer health inquiries from the U.S. National Library of Medicine that have been manually summarized by medical experts. This task challenges models to condense these often verbose and vague
-                            inquiries into concise, medically accurate summaries. The ability to effectively interpret and summarize patient inquiries, despite not involving clinical documents, is highly valuable for applications in healthcare
+                            inquiries into concise, medically accurate questions. The ability to effectively interpret and summarize patient inquiries, despite not involving clinical documents, is highly valuable for applications in healthcare
                             settings.
                         </p>
-                        <pre style="background-color: #ebe8e8; overflow-x: auto; position: relative">
+                        <pre style="background-color: #f9fafb; overflow-x: auto; position: relative">
 <button @click="copyBibTex($event)" class="copy-btn pi pi-copy" style="position: absolute; top: 5px; right: 5px;"></button>
 <code ref="bibtex">@inproceedings{abacha2019summarization,
   title={On the summarization of consumer health questions},
@@ -512,7 +509,7 @@ const copyBibTex = (event) => {
                             inputs, while the Plan section provides the ground truth for the models' predictions. This task is a form of information extraction that challenges models to identify specific health issues from condensed, preprocessed
                             clinical text.
                         </p>
-                        <pre style="background-color: #ebe8e8; overflow-x: auto; position: relative">
+                        <pre style="background-color: #f9fafb; overflow-x: auto; position: relative">
 <button @click="copyBibTex($event)" class="copy-btn pi pi-copy" style="position: absolute; top: 5px; right: 5px;"></button>
 <code ref="bibtex">@inproceedings{gao2022summarizing,
   title={Summarizing patients’ problems from hospital progress notes using pre-trained sequence-to-sequence models},
@@ -530,7 +527,7 @@ const copyBibTex = (event) => {
                             The core task involves predicting the logical relationship—whether it is contradiction, neutrality, or entailment—between each premise and its hypotheses. With its focus on short input lengths, MedNLI effectively measures
                             a model's clinical reasoning capabilities without the complexity of processing long text inputs.
                         </p>
-                        <pre style="background-color: #ebe8e8; overflow-x: auto; position: relative">
+                        <pre style="background-color: #f9fafb; overflow-x: auto; position: relative">
 <button @click="copyBibTex($event)" class="copy-btn pi pi-copy" style="position: absolute; top: 5px; right: 5px;"></button>
 <code ref="bibtex">@article{romanov2018lessons,
 	title = {Lessons from Natural Language Inference in the Clinical Domain},
@@ -546,11 +543,11 @@ const copyBibTex = (event) => {
                     </TabPanel>
                     <TabPanel header="LongHealth">
                         <p class="m-0">
-                            The LongHealth dataset features 20 intricate fictional patient records to test language models on their ability to handle extended texts, as these models typically underperform with longer inputs. It tasks models with
-                            answering multiple-choice questions, structured into three distinct evaluation sub-tasks. These tasks progressively increase in complexity by first focusing on relevant documents, then introducing extraneous information to
-                            filter out, and finally testing the model's ability to identify unprovided information. In contrast to the original paper, we have set the maximum context length to 8k tokens.
+                            The LongHealth dataset features 20 fictional patient records to test language models on their ability to handle extended texts, as these models typically underperform with longer inputs. It tasks models with answering
+                            multiple-choice questions, structured into three distinct evaluation sub-tasks. These tasks progressively increase in complexity by first focusing on relevant documents, then introducing extraneous information to filter
+                            out, and finally testing the model's ability to identify unprovided information. In contrast to the original paper, we have set the maximum context length to 8k tokens.
                         </p>
-                        <pre style="background-color: #ebe8e8; overflow-x: auto; position: relative">
+                        <pre style="background-color: #f9fafb; overflow-x: auto; position: relative">
 <button @click="copyBibTex($event)" class="copy-btn pi pi-copy" style="position: absolute; top: 5px; right: 5px;"></button>
 <code ref="bibtex">@article{adams2024longhealth,
   title={LongHealth: A Question Answering Benchmark with Long Clinical Documents},
@@ -563,6 +560,8 @@ const copyBibTex = (event) => {
             </Panel>
             <div id="model-select" class="card w-full my-3">
                 <h3>Model Selection</h3>
+                <p>Select one or more models from the list below to view their benchmark results.</p>
+
                 <Divider />
                 <MultiSelect class="w-full" v-model="selectedModels" display="chip" :options="models" placeholder="Select Models" filter> </MultiSelect>
             </div>
@@ -571,14 +570,15 @@ const copyBibTex = (event) => {
                 <h3>Average Scores</h3>
                 <Divider />
                 <p>
-                    We provide two averaged scores: Level 1 and Level 2. Level 1 includes the tasks MedNLI, MeQSum and Problem Summary, which feature shorter examples. Level 2 includes the remaining tasks: MeDiSumCode, MeDiSumQA and LongHealth. We
-                    compute the average across all F1 and Accuracy scores, excluding ROUGE scores. Further details can be found in our <a href="https://arxiv.org/abs/2404.04067" target="_blank" rel="noopener noreferrer">paper</a>.
+                    We provide two averaged scores: Level 1 and Level 2. Level 1 includes the tasks MedNLI, MeQSum and Problem Summary, which feature shorter examples. Level 2 includes the remaining tasks: MeDiSumCode, MeDiSumQA and LongHealth.
+                    Further details can be found in our <a href="https://arxiv.org/abs/2404.04067" target="_blank" rel="noopener noreferrer">paper</a>.
                 </p>
                 <Chart type="bar" :data="bar2Data(selectedTask, selectedMetric)" :options="bar2Option" :plugins="barPlugins"></Chart>
             </div>
 
             <div class="card w-full">
                 <h3>Individual Task Scores</h3>
+                <p>Explore detailed performance results for each model by selecting a specific task and metric.</p>
                 <Divider />
                 <div class="w-full mb-3">
                     <h5 class="mb-3">{{ selectedTask.name }} ({{ selectedMetric }})</h5>
@@ -594,7 +594,7 @@ const copyBibTex = (event) => {
                 <section class="section" id="BibTeX">
                     <div class="container is-max-desktop content" style="position: relative">
                         <p>If you find our work useful, please cite our paper:</p>
-                        <pre style="background-color: #ebe8e8; overflow-x: auto; position: relative">
+                        <pre style="background-color: #f9fafb; overflow-x: auto; position: relative">
                             <button @click="copyBibTex($event)" class="copy-btn pi pi-copy" style="position: absolute; top: 5px; right: 5px;"></button>
 <code ref="bibtex">@article{dada2024clue,
   title={CLUE: A Clinical Language Understanding Evaluation for LLMs},
