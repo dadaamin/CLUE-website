@@ -47,21 +47,32 @@ const colors = [
 ];
 
 const models = ref([
-    'Llama3-OpenBioLLM-8B',
-    'Meta-Llama-3-8B-Instruct',
-    'Llama3-OpenBioLLM-70B',
-    'Meta-Llama-3-70B-Instruct',
-    'Mixtral-8x7B-Instruct-v0.1',
-    'Mixtral-8x22B-Instruct-v0.1',
-    'zephyr-7b-beta',
-    'Mistral-7B-Instruct-v0.1',
-    'Mistral-7B-Instruct-v0.2',
-    'BioMistral-7B-DARE',
     'llama2-7b',
     'meditron-7b',
-    'llama2-70b',
+    'llama2-7b-hf',
+    'Mistral-7B-v0.1',
+    'internistai/base-7b-v0.2',
+    'BioMistral-7B',
+    'BioMistral-7B-DARE',
+    'Mistral-7B-Instruct-v0.1',
+    'zephyr-7b-beta',
+    'Mistral-7B-Instruct-v0.2',
+    'Meta-Llama-3-8B-Instruct',
+    'Llama3-OpenBioLLM-8B',
+    'JSL-Med-Sft-Llama-3-8B',
+    'JSL-MedLlama-3-8B-v1.0',
+    'JSL-MedLlama-3-8B-v2.0',
+    'Llama3-Aloe-8B-Alpha',
+    'Phi-3-mini-128k-instruct',
+    'Mixtral-8x7B-v0.1',
+    'Mixtral-8x7B-Instruct-v0.1',
+    'Llama-2-70b',
     'meditron-70b',
-    'BioMistral-7B'
+    'ClinicalCamel-70B',
+    'Llama-2-70b-chat',
+    'Meta-Llama-3-70B-Instruct',
+    'Llama3-OpenBioLLM-70B',
+    'Mixtral-8x22B-Instruct-v0.1'
 ]);
 
 const detectMobileDevice = () => {
@@ -78,111 +89,189 @@ const colorMap = models.value.reduce((acc, model, index) => {
     return acc;
 }, {});
 
+const modelFamilies = {
+    'Mistral-7B-v0.1': ['Mistral-7B-v0.1', 'internistai/base-7b-v0.2', 'zephyr-7b-beta'],
+    'Mistral-7B-Instruct-v0.1': ['Mistral-7B-Instruct-v0.1', 'BioMistral-7B', 'BioMistral-7B-DARE'],
+    'Mistral-7B-Instruct-v0.2': ['Mistral-7B-Instruct-v0.2'],
+    'Meta-Llama-3-8B-Instruct': ['Meta-Llama-3-8B-Instruct', 'Llama3-OpenBioLLM-8B', 'JSL-Med-Sft-Llama-3-8B', 'JSL-MedLlama-3-8B-v1.0', 'JSL-MedLlama-3-8B-v2.0', 'Llama3-Aloe-8B-Alpha'],
+    'Phi-3-mini-128k-instruct': ['Phi-3-mini-128k-instruct'],
+    'Mixtral-8x7B-Instruct-v0.1': ['Mixtral-8x7B-Instruct-v0.1'],
+    'Meta-Llama-3-70B-Instruct': ['Meta-Llama-3-70B-Instruct', 'Llama3-OpenBioLLM-70B'],
+    'Mixtral-8x22B-Instruct-v0.1': ['Mixtral-8x22B-Instruct-v0.1']
+};
+
 const modelScores = {
-    'llama2-7b': [33.76],
-    'llama2-70b': [48.95],
-    'meditron-7b': [26.32],
-    'meditron-70b': [43.93],
-    'Llama3-OpenBioLLM-8B': [54.3, 30.48],
-    'Meta-Llama-3-8B-Instruct': [65.07, 45.96],
-    'Llama3-OpenBioLLM-70B': [64.99, 51.13],
-    'Meta-Llama-3-70B-Instruct': [68.72, 60.99],
-    'zephyr-7b-beta': [60.2, 34.81],
-    'Mistral-7B-Instruct-v0.1': [57.96, 28.85],
-    'Mistral-7B-Instruct-v0.2': [63.09, 44.72],
-    'BioMistral-7B': [57.77],
-    'BioMistral-7B-DARE': [60.41, 31.14],
-    'Mixtral-8x7B-Instruct-v0.1': [64.44, 48.64],
-    'Mixtral-8x22B-Instruct-v0.1': [68.58, 56.68]
+    'llama2-7b': [20.11],
+    'meditron-7b': [11.46],
+    'llama2-7b-hf': [36.94],
+    'Mistral-7B-v0.1': [33.99, 9.55],
+    'internistai/base-7b-v0.2': [38.24, 28.64],
+    'BioMistral-7B': [40.57, 23.83],
+    'BioMistral-7B-DARE': [43.24, 25.82],
+    'Mistral-7B-Instruct-v0.1': [40.31, 23.12],
+    'zephyr-7b-beta': [42.69, 28.17],
+    'Mistral-7B-Instruct-v0.2': [46.45, 38.94],
+    'Meta-Llama-3-8B-Instruct': [48.37, 40.61],
+    'Llama3-OpenBioLLM-8B': [33.2, 25.44],
+    'JSL-Med-Sft-Llama-3-8B': [19.0, 15.68],
+    'JSL-MedLlama-3-8B-v1.0': [17.0, 29.94],
+    'JSL-MedLlama-3-8B-v2.0': [31.26, 18.02],
+    'Llama3-Aloe-8B-Alpha': [42.5, 30.31],
+    'Phi-3-mini-128k-instruct': [41.7, 24.39],
+    'Mixtral-8x7B-Instruct-v0.1': [47.81, 42.57],
+    'Llama-2-70b': [35.17],
+    'meditron-70b': [30.58],
+    'ClinicalCamel-70B': [35.71],
+    'Llama-2-70b-chat': [42.9],
+    'Meta-Llama-3-70B-Instruct': [52.36, 56.0],
+    'Llama3-OpenBioLLM-70B': [47.57, 45.56],
+    'Mixtral-8x22B-Instruct-v0.1': [51.88, 51.23]
 };
 
 const modelMetrics = {
     MeDiSumCode: {
-        'zephyr-7b-beta': [2.31, 12.0, 71.27],
-        'Mistral-7B-Instruct-v0.1': [0.57, 3.78, 37.25],
-        'Mistral-7B-Instruct-v0.2': [3.08, 18.23, 68.76],
+        'Mistral-7B-v0.1': [0.77, 5.32, 33.21],
+        'internistai/base-7b-v0.2': [1.87, 10.25, 53.57],
+        'BioMistral-7B': [1.67, 9.92, 54.51],
         'BioMistral-7B-DARE': [1.2, 6.66, 56.04],
-        'Mixtral-8x7B-Instruct-v0.1': [10.49, 28.99, 82.87],
-        'Llama3-OpenBioLLM-8B': [0.84, 0.48, 51.16],
+        'Mistral-7B-Instruct-v0.1': [0.57, 3.78, 37.25],
+        'zephyr-7b-beta': [2.31, 12.0, 71.27],
+        'Mistral-7B-Instruct-v0.2': [3.08, 18.23, 68.76],
         'Meta-Llama-3-8B-Instruct': [3.95, 17.55, 61.93],
+        'Llama3-OpenBioLLM-8B': [0.84, 4.84, 51.16],
+        'JSL-Med-Sft-Llama-3-8B': [3.09, 14.03, 68.37],
+        'JSL-MedLlama-3-8B-v1.0': [1.87, 12.8, 67.3],
+        'JSL-MedLlama-3-8B-v2.0': [1.41, 11.13, 64.31],
+        'Llama3-Aloe-8B-Alpha': [1.77, 12.78, 44.84],
+        'Phi-3-mini-128k-instruct': [0.43, 3.63, 86.24],
+        'Mixtral-8x7B-Instruct-v0.1': [10.49, 28.99, 82.87],
         'Llama3-OpenBioLLM-70B': [7.37, 20.24, 73.65],
         'Meta-Llama-3-70B-Instruct': [19.65, 39.2, 93.94],
         'Mixtral-8x22B-Instruct-v0.1': [15.95, 35.96, 79.84]
     },
     MeDiSumQA: {
-        'zephyr-7b-beta': [18.2, 21.3, 8.91, 66.27, 19.06],
-        'Mistral-7B-Instruct-v0.1': [18.78, 21.5, 10.05, 66.71, 18.63],
-        'Mistral-7B-Instruct-v0.2': [24.39, 28.0, 13.2, 69.53, 24.07],
-        'BioMistral-7B-DARE': [17.54, 19.9, 9.34, 64.6, 18.65],
-        'Mixtral-8x7B-Instruct-v0.1': [25.54, 29.26, 13.89, 69.57, 24.47],
-        'Llama3-OpenBioLLM-8B': [25.1, 27.84, 13.12, 66.3, 24.79],
-        'Meta-Llama-3-8B-Instruct': [24.49, 27.95, 12.75, 69.38, 23.37],
-        'Llama3-OpenBioLLM-70B': [24.43, 27.73, 13.29, 68.98, 24.5],
-        'Meta-Llama-3-70B-Instruct': [27.24, 30.95, 14.24, 70.71, 25.84],
-        'Mixtral-8x22B-Instruct-v0.1': [23.8, 27.62, 12.69, 69.23, 23.55]
+        'Mistral-7B-v0.1': [5.93, 7.16, 1.59, 53.47, 7.47],
+        'internistai/base-7b-v0.2': [9.24, 11.94, 3.23, 61.82, 13.0],
+        'BioMistral-7B': [14.65, 17.81, 5.46, 59.01, 16.88],
+        'BioMistral-7B-DARE': [17.01, 20.87, 6.92, 65.17, 18.45],
+        'Mistral-7B-Instruct-v0.1': [16.62, 21.34, 6.95, 65.68, 16.77],
+        'zephyr-7b-beta': [13.02, 17.68, 4.98, 64.08, 13.92],
+        'Mistral-7B-Instruct-v0.2': [21.8, 27.47, 9.19, 68.43, 20.3],
+        'Meta-Llama-3-8B-Instruct': [22.44, 28.15, 9.63, 68.62, 22.74],
+        'Llama3-OpenBioLLM-8B': [22.89, 27.95, 10.45, 68.7, 22.15],
+        'JSL-Med-Sft-Llama-3-8B': [8.85, 11.74, 3.21, 58.38, 10.54],
+        'JSL-MedLlama-3-8B-v1.0': [19.06, 22.7, 7.63, 67.29, 20.83],
+        'JSL-MedLlama-3-8B-v2.0': [19.13, 24.15, 8.56, 67.41, 20.49],
+        'Llama3-Aloe-8B-Alpha': [11.03, 14.97, 4.57, 63.87, 12.68],
+        'Phi-3-mini-128k-instruct': [18.47, 22.45, 6.94, 65.72, 16.52],
+        'Mixtral-8x7B-Instruct-v0.1': [20.72, 26.4, 8.96, 67.74, 20.25],
+        'Llama3-OpenBioLLM-70B': [21.85, 27.8, 9.54, 68.43, 22.47],
+        'Meta-Llama-3-70B-Instruct': [26.2, 32.5, 11.93, 70.24, 25.78],
+        'Mixtral-8x22B-Instruct-v0.1': [21.81, 27.75, 9.42, 68.51, 22.7]
     },
     MeQSum: {
         'llama2-7b': [7.16, 8.58, 2.89, 37.5],
-        'llama2-70b': [3.75, 4.15, 1.05, 33.59],
         'meditron-7b': [6.17, 7.47, 2.53, 40.53],
-        'meditron-70b': [2.95, 3.24, 0.76, 31.27],
-        'zephyr-7b-beta': [7.16, 8.58, 2.89, 37.5],
-        'Mistral-7B-Instruct-v0.1': [21.85, 25.26, 11.17, 66.15],
-        'Mistral-7B-Instruct-v0.2': [33.54, 37.47, 16.61, 73.47],
-        'BioMistral-7B': [24.58, 27.38, 12.1, 67.05],
+        'llama2-7b-hf': [36.45, 39.99, 18.13, 75.98],
+        'Mistral-7B-v0.1': [6.28, 7.86, 2.49, 44.6],
+        'internistai/base-7b-v0.2': [7.65, 9.54, 3.44, 40.34],
+        'BioMistral-7B': [25.89, 28.46, 13.31, 67.93],
         'BioMistral-7B-DARE': [26.16, 29.69, 13.49, 68.68],
-        'Mixtral-8x7B-Instruct-v0.1': [32.47, 36.38, 16.86, 72.8],
-        'Llama3-OpenBioLLM-8B': [26.21, 29.41, 14.03, 62.39],
+        'Mistral-7B-Instruct-v0.1': [21.85, 25.26, 11.17, 66.15],
+        'zephyr-7b-beta': [25.66, 29.81, 12.33, 68.85],
+        'Mistral-7B-Instruct-v0.2': [33.54, 37.47, 16.61, 73.47],
         'Meta-Llama-3-8B-Instruct': [32.2, 36.49, 16.37, 72.74],
-        'Llama3-OpenBioLLM-70B': [30.72, 34.31, 15.55, 71.99],
+        'Llama3-OpenBioLLM-8B': [26.21, 29.41, 14.03, 62.39],
+        'JSL-Med-Sft-Llama-3-8B': [6.57, 7.73, 2.99, 31.7],
+        'JSL-MedLlama-3-8B-v1.0': [6.02, 7.19, 2.43, 41.78],
+        'JSL-MedLlama-3-8B-v2.0': [30.93, 34.54, 16.31, 71.03],
+        'Llama3-Aloe-8B-Alpha': [23.78, 27.02, 12.31, 66.01],
+        'Phi-3-mini-128k-instruct': [32.05, 35.85, 15.81, 73.01],
+        'Mixtral-8x7B-v0.1': [9.36, 10.35, 4.3, 31.04],
+        'Mixtral-8x7B-Instruct-v0.1': [32.47, 36.38, 16.86, 72.8],
+        'Llama-2-70b': [3.75, 4.15, 1.05, 33.59],
+        'meditron-70b': [2.95, 3.24, 0.76, 31.27],
+        'ClinicalCamel-70B': [16.96, 18.8, 8.49, 49.3],
+        'Llama-2-70b-chat': [34.91, 38.81, 18.48, 74.37],
         'Meta-Llama-3-70B-Instruct': [36.57, 40.2, 19.3, 75.74],
+        'Llama3-OpenBioLLM-70B': [30.72, 34.31, 15.55, 71.99],
         'Mixtral-8x22B-Instruct-v0.1': [36.15, 39.94, 19.45, 75.02]
     },
     'Problem Summary': {
         'llama2-7b': [5.97, 7.35, 2.11, 59.45, 9.06],
-        'llama2-70b': [7.13, 8.77, 3.15, 59.61, 14.34],
         'meditron-7b': [6.49, 7.87, 2.59, 59.57, 12.52],
-        'meditron-70b': [7.22, 8.91, 3.21, 60.08, 13.91],
-        'zephyr-7b-beta': [5.97, 7.35, 2.11, 59.45, 9.06],
-        'Mistral-7B-Instruct-v0.1': [14.46, 18.6, 6.26, 65.79, 20.08],
-        'Mistral-7B-Instruct-v0.2': [19.57, 25.59, 8.92, 69.64, 22.07],
-        'BioMistral-7B': [18.0, 21.85, 8.63, 66.96, 20.92],
+        'llama2-7b-hf': [17.43, 22.25, 6.93, 66.33, 21.62],
+        'Mistral-7B-v0.1': [7.07, 8.99, 3.17, 60.74, 15.67],
+        'internistai/base-7b-v0.2': [13.11, 16.79, 5.63, 62.94, 17.22],
+        'BioMistral-7B': [16.9, 20.89, 8.4, 59.03, 20.12],
         'BioMistral-7B-DARE': [18.81, 22.92, 8.93, 68.93, 22.65],
-        'Mixtral-8x7B-Instruct-v0.1': [17.44, 23.39, 7.7, 68.56, 19.51],
+        'Mistral-7B-Instruct-v0.1': [14.46, 18.6, 6.26, 65.79, 20.08],
+        'zephyr-7b-beta': [14.81, 19.91, 5.98, 67.39, 19.2],
+        'Mistral-7B-Instruct-v0.2': [19.57, 25.59, 8.92, 69.64, 22.07],
+        'Meta-Llama-3-8B-Instruct': [22.7, 28.52, 9.87, 71.45, 25.32],
         'Llama3-OpenBioLLM-8B': [10.82, 13.62, 4.03, 64.14, 15.67],
-        'Meta-Llama-3-8B-Instruct': [32.2, 36.49, 16.37, 72.74],
-        'Llama3-OpenBioLLM-70B': [22.7, 28.52, 9.87, 71.45, 25.32],
-        'Meta-Llama-3-70B-Instruct': [25.43, 33.16, 13.01, 73.0, 29.12],
+        'JSL-Med-Sft-Llama-3-8B': [4.59, 5.75, 1.61, 57.69, 8.75],
+        'JSL-MedLlama-3-8B-v1.0': [12.87, 15.4, 4.73, 65.18, 18.42],
+        'JSL-MedLlama-3-8B-v2.0': [8.16, 10.61, 2.94, 64.48, 13.17],
+        'Llama3-Aloe-8B-Alpha': [9.47, 12.3, 4.06, 65.56, 15],
+        'Phi-3-mini-128k-instruct': [19.8, 23.72, 8.47, 70.27, 21.06],
+        'Mixtral-8x7B-v0.1': [7.26, 9.37, 3.14, 60.54, 11.94],
+        'Mixtral-8x7B-Instruct-v0.1': [17.44, 23.39, 7.7, 68.56, 19.51],
+        'Llama-2-70b': [7.13, 8.77, 3.15, 59.61, 14.34],
+        'meditron-70b': [7.22, 8.91, 3.21, 60.08, 13.91],
+        'ClinicalCamel-70B': [8.62, 10.83, 3.71, 59.94, 12.34],
+        'Llama-2-70b-chat': [14.43, 19.81, 6.14, 65.07, 21.37],
+        'Meta-Llama-3-70B-Instruct': [25.43, 33.16, 13.01, 73, 29.12],
+        'Llama3-OpenBioLLM-70B': [12.1, 16.67, 5.58, 66.51, 17.74],
         'Mixtral-8x22B-Instruct-v0.1': [17.97, 22.6, 8.17, 69.29, 22.31]
     },
     MedNLI: {
         'llama2-7b': [29.51],
-        'llama2-70b': [76.27],
         'meditron-7b': [2.39],
-        'meditron-70b': [63.52],
-        'zephyr-7b-beta': [68.45],
-        'Mistral-7B-Instruct-v0.1': [64.79],
-        'Mistral-7B-Instruct-v0.2': [69.93],
-        'BioMistral-7B': [62.32],
+        'llama2-7b-hf': [41.27],
+        'Mistral-7B-v0.1': [67.54],
+        'internistai/base-7b-v0.2': [76.34],
+        'BioMistral-7B': [62.75],
         'BioMistral-7B-DARE': [66.76],
-        'Mixtral-8x7B-Instruct-v0.1': [76.48],
-        'Llama3-OpenBioLLM-8B': [44.93],
+        'Mistral-7B-Instruct-v0.1': [64.79],
+        'zephyr-7b-beta': [68.45],
+        'Mistral-7B-Instruct-v0.2': [69.93],
         'Meta-Llama-3-8B-Instruct': [74.08],
-        'Llama3-OpenBioLLM-70B': [80.85],
+        'Llama3-OpenBioLLM-8B': [44.93],
+        'JSL-Med-Sft-Llama-3-8B': [29.08],
+        'JSL-MedLlama-3-8B-v1.0': [13.31],
+        'JSL-MedLlama-3-8B-v2.0': [35.7],
+        'Llama3-Aloe-8B-Alpha': [73.94],
+        'Phi-3-mini-128k-instruct': [57.25],
+        'Mixtral-8x7B-v0.1': [80.14],
+        'Mixtral-8x7B-Instruct-v0.1': [76.48],
+        'Llama-2-70b': [76.27],
+        'meditron-70b': [63.52],
+        'ClinicalCamel-70B': [64.65],
+        'Llama-2-70b-chat': [61.69],
         'Meta-Llama-3-70B-Instruct': [79.37],
+        'Llama3-OpenBioLLM-70B': [80.85],
         'Mixtral-8x22B-Instruct-v0.1': [84.93]
     },
     LongHealth: {
-        'Mistral-7B-Instruct-v0.1': [45.75, 40.65, 3.65],
-        'BioMistral-7B-DARE': [46.0, 40.85, 4.6],
-        'Mistral-7B-Instruct-v0.2': [67.2, 62.4, 42.45],
-        'Mixtral-8x7B-Instruct-v0.1': [76.5, 73.65, 24.2],
-        'Mixtral-8x22B-Instruct-v0.1': [79.0, 73.9, 86.3],
-        'zephyr-7b-beta': [42.9, 30.5, 26.35],
-        'Llama3-OpenBioLLM-8B': [37.55, 41.75, 1.55],
-        'Meta-Llama-3-8B-Instruct': [68.3, 66.55, 56.25],
-        'Llama3-OpenBioLLM-70B': [80.2, 75.6, 62.9],
-        'Meta-Llama-3-70B-Instruct': [81.65, 77.9, 91.7]
+        'Mistral-7B-v0.1': [9.55, 0.6, 0.55, 0.15],
+        'internistai/base-7b-v0.2': [28.64, 52.75, 30.6, 49.2],
+        'BioMistral-7B': [23.83, 38.05, 34.25, 7.8],
+        'BioMistral-7B-DARE': [25.82, 46.0, 40.85, 4.6],
+        'Mistral-7B-Instruct-v0.1': [23.12, 45.75, 40.65, 3.65],
+        'zephyr-7b-beta': [28.17, 42.9, 30.5, 26.35],
+        'Mistral-7B-Instruct-v0.2': [38.94, 67.2, 62.4, 42.45],
+        'Meta-Llama-3-8B-Instruct': [40.61, 68.3, 66.55, 56.25],
+        'Llama3-OpenBioLLM-8B': [25.44, 37.55, 41.75, 1.55],
+        'JSL-Med-Sft-Llama-3-8B': [15.68, 0.0, 0.0, 0.0],
+        'JSL-MedLlama-3-8B-v1.0': [29.94, 52.85, 52.05, 0.05],
+        'JSL-MedLlama-3-8B-v2.0': [18.02, 1.1, 0.3, 0.05],
+        'Llama3-Aloe-8B-Alpha': [30.31, 66.75, 63.3, 19.05],
+        'Phi-3-mini-128k-instruct': [24.39, 27.25, 23.9, 0.0],
+        'Mixtral-8x7B-Instruct-v0.1': [42.57, 76.5, 73.65, 24.2],
+        'Llama3-OpenBioLLM-70B': [45.56, 80.2, 75.6, 62.9],
+        'Meta-Llama-3-70B-Instruct': [56.0, 81.65, 77.9, 91.7],
+        'Mixtral-8x22B-Instruct-v0.1': [51.23, 79.0, 73.9, 86.3]
     }
 };
 
@@ -303,6 +392,60 @@ const barData = (task, metric) => {
     };
 };
 
+const scatterData = () => {
+    let labels = [];
+    let datasets = [];
+    if (selectedModels.value == null) {
+        return {
+            labels: labels,
+            datasets: datasets
+        };
+    }
+
+    // for (let [model, scores] of Object.entries(modelScores)) {
+    //     if (selectedModels.value.includes(model) && scores.length == 2) {
+    //         datasets.push({
+    //             label: model,
+    //             data: [{ x: scores[0], y: scores[1] }],
+    //             backgroundColor: colorMap[model]
+    //         });
+    //     }
+    // }
+
+    for (let baseModel in modelFamilies) {
+        for (let model of modelFamilies[baseModel]) {
+            let dataset = {
+                label: model,
+                data: [],
+                backgroundColor: colorMap[model],
+                showLine: false,
+                pointRadius: 5
+            };
+            let scores = modelScores[model];
+            if (scores.length == 2 && selectedModels.value.includes(model)) {
+                dataset.data.push(scores);
+            }
+            if (dataset.data.length > 0) {
+                datasets.push(dataset);
+            }
+        }
+    }
+    for (let baseModel in modelFamilies) {
+        for (let model of modelFamilies[baseModel]) {
+            if (selectedModels.value.includes(baseModel) && selectedModels.value.includes(model) && baseModel != model) {
+                datasets.push({
+                    type: 'line',
+                    data: [modelScores[baseModel], modelScores[model]],
+                    label: 'ignore'
+                });
+            }
+        }
+    }
+    return {
+        datasets: datasets
+    };
+};
+
 const bar2Data = () => {
     let labels = [];
     let datasets = [];
@@ -384,6 +527,55 @@ const bar2Option = ref({
         }
     },
     indexAxis: is_small_device.value ? 'x' : 'y'
+});
+
+const scatterOption = ref({
+    plugins: {
+        tooltip: {
+            callbacks: {
+                label: function (ctx) {
+                    return ctx.dataset.label;
+                }
+            },
+            filter: function (tooltipItem, data) {
+                console.log(tooltipItem);
+                return data == 0 && tooltipItem.dataset.label != 'ignore';
+            }
+        },
+        legend: {
+            display: true,
+            labels: {
+                filter: function (legendItem, data) {
+                    return legendItem.text != 'ignore';
+                }
+            }
+        },
+        annotation: {
+            annotations: {
+                line: {
+                    arrowHeads: {
+                        end: {
+                            display: true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    scales: {
+        x: {
+            title: {
+                text: 'Average Level 1 Score',
+                display: true
+            }
+        },
+        y: {
+            title: {
+                text: 'Average Level 2 Score',
+                display: true
+            }
+        }
+    }
 });
 
 watch(
@@ -568,11 +760,15 @@ const copyBibTex = (event) => {
 
             <div class="card w-full my-3">
                 <h3>Average Scores</h3>
+
                 <Divider />
                 <p>
                     We provide two averaged scores: Level 1 and Level 2. Level 1 includes the tasks MedNLI, MeQSum and Problem Summary, which feature shorter examples. Level 2 includes the remaining tasks: MeDiSumCode, MeDiSumQA and LongHealth.
                     Further details can be found in our <a href="https://arxiv.org/abs/2404.04067" target="_blank" rel="noopener noreferrer">paper</a>.
                 </p>
+                <Chart type="scatter" :data="scatterData(selectedTask, selectedMetric)" :options="scatterOption"></Chart>
+                <Divider />
+
                 <Chart type="bar" :data="bar2Data(selectedTask, selectedMetric)" :options="bar2Option" :plugins="barPlugins"></Chart>
             </div>
 
