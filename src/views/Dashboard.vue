@@ -548,6 +548,9 @@ const scatterOption = ref({
                 filter: function (legendItem, data) {
                     return legendItem.text != 'ignore';
                 }
+            },
+            onClick: () => {
+                return;
             }
         },
         annotation: {
